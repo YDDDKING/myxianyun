@@ -1,14 +1,20 @@
 <template>
   <div class="postCreateCaogaoBox">
     <div>
-      <div class="caoGaoBoxTitle">草稿箱（{{ caogaoBox.length }}）</div>
+      <div class="caoGaoBoxTitle">
+        草稿箱（{{ $store.state.post.caogao.length }}）<span
+          class="caogaoHistory"
+          @click="clearCaogao"
+          >清空</span
+        >
+      </div>
       <div
         class="caoGaoBoxContent"
-        v-for="item in caogaoBox"
-        :key="item.caogaoIndex"
+        v-for="(item, index) in $store.state.post.caogao"
+        :key="index"
       >
         <div class="caoGaoBoxText" @click="showCaogao">
-          {{ item.caogaoTitle }} <i class="el-icon-edit"></i>
+          {{ item.data.caogaoTitle }} <i class="el-icon-edit"></i>
         </div>
         <div class="caoGaoBoxTime">{{ item.time }}</div>
       </div>
@@ -20,17 +26,20 @@
 export default {
   data() {
     return {
-      caogaoBox: [
-        {
-          caogaoIndex: 0,
-          caogaoTitle: 123
-        }
-      ]
+      // caogaoBox: [
+      //   {
+      //     caogaoIndex: 0,
+      //     caogaoTitle: 123
+      //   }
+      // ]
     };
   },
   methods: {
     showCaogao() {
-      console.log(this.caogaoBox);
+      console.log("111");
+    },
+    clearCaogao() {
+      this.$store.commit("post/clearCaogao");
     }
   },
   watch: {
@@ -63,5 +72,10 @@ export default {
 .caoGaoBoxTime {
   font-size: 14px;
   color: #999;
+}
+
+.caogaoHistory {
+  font-size: 14px;
+  float: right;
 }
 </style>

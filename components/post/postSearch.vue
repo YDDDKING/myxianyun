@@ -6,6 +6,7 @@
         v-model="input"
         clearable
         class="postSearch"
+        @keyup.enter.native="onEnter"
       >
       </el-input>
       <i class="el-icon-search icon"></i>
@@ -13,9 +14,9 @@
 
     <div class="searchBottom">
       推荐：
-      <span class="searchBottomAdd one">广州</span>
-      <span class="searchBottomAdd two">上海</span>
-      <span class="searchBottomAdd three">北京</span>
+      <span class="searchBottomAdd one" @click="tuijian('广州')">广州</span>
+      <span class="searchBottomAdd two" @click="tuijian('上海')">上海</span>
+      <span class="searchBottomAdd three" @click="tuijian('北京')">北京</span>
     </div>
   </div>
 </template>
@@ -26,6 +27,17 @@ export default {
     return {
       input: ""
     };
+  },
+  methods: {
+    tuijian(data) {
+      // console.log(data);
+      this.$emit("tuijian", data);
+    },
+    onEnter() {
+      let value = this.input;
+      // console.log(this.input);
+      this.$emit("search", value);
+    }
   }
 };
 </script>
@@ -64,13 +76,13 @@ export default {
 
 .searchBottom {
   margin: 10px 0px;
-  color:#666;
-  font-size:14px;
+  color: #666;
+  font-size: 14px;
 }
 
-.searchBottomAdd{
-  color:#666;
-  font-size:14px;
+.searchBottomAdd {
+  color: #666;
+  font-size: 14px;
 }
 .searchBottomAdd:hover {
   color: #ffa500;

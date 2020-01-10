@@ -3,22 +3,21 @@
     <!-- 左字右图!-->
     <div
       class="single"
-      v-for="(item, index) in postList"
-      :key="index"
-      v-if="item.images.length < 3"
+      v-if="data.images.length < 3"
+      @click="toDetail(data.city.id)"
     >
       <div>
-        <img :src="item.images[0]" alt style="width:220px;height:150px" />
+        <img :src="data.images[0]" alt style="width:220px;height:150px" />
       </div>
 
       <div class="left">
-        <p class="title">{{ item.title }}</p>
-        <p class="content" v-html="item.summary"></p>
+        <p class="title">{{ data.title }}</p>
+        <p class="content" v-html="data.summary"></p>
         <p class="info">
           <span
-            ><i class="el-icon-location-outline"></i>{{ item.cityName }}</span
+            ><i class="el-icon-location-outline"></i>{{ data.cityName }}</span
           >
-          <span><i class="el-icon-view"></i>{{ item.watch }}</span>
+          <span><i class="el-icon-view"></i>{{ data.watch }}</span>
         </p>
       </div>
     </div>
@@ -26,14 +25,13 @@
     <!-- 上字下图!-->
     <div
       class="single1"
-      v-for="(item, index) in postList"
-      :key="index"
-      v-if="item.images.length >= 3"
+      v-if="data.images.length >= 3"
+      @click="toDetail(data.city.id)"
     >
-      <p class="title">{{ item.title }}</p>
-      <p class="content" style="padding: 0px 5px;" v-html="item.summary"></p>
+      <p class="title">{{ data.title }}</p>
+      <p class="content" style="padding: 0px 5px;" v-html="data.summary"></p>
       <div class="imgs" style="overflow:hidden">
-        <div v-for="(imgItem, index) in item.images" :key="index">
+        <div v-for="(imgItem, index) in data.images" :key="index">
           <img
             :src="imgItem"
             style="width:220px;height:150px;margin:0px 10px;"
@@ -41,8 +39,8 @@
         </div>
       </div>
       <p class="info">
-        <span><i class="el-icon-location-outline"></i>{{ item.cityName }}</span>
-        <span><i class="el-icon-view"></i>{{ item.watch }}</span>
+        <span><i class="el-icon-location-outline"></i>{{ data.cityName }}</span>
+        <span><i class="el-icon-view"></i>{{ data.watch }}</span>
       </p>
     </div>
   </div>
@@ -50,20 +48,22 @@
 
 <script>
 export default {
-  data() {
-    return {
-      postList: []
-    };
+  props: {
+    // 数据
+    data: {
+      type: Object,
+      // 默认是空数组
+      default() {
+        return {};
+      }
+    }
   },
-  mounted() {
-    this.$axios({
-      url: "/posts"
-    }).then(res => {
-      // console.log(res);
-      this.postList = res.data.data;
-      // console.log(this.postList);
-    });
-  }
+  methods: {
+    toDetail(id) {
+      this.$emit("toDetail", id);
+    }
+  },
+  mounted() {}
 };
 </script>
 
@@ -77,7 +77,13 @@ body {
   font-size: 18px;
   padding: 0px 5px;
   margin-bottom: 5px;
+  cursor: pointer;
 }
+
+.title:hover {
+  color: #ffa500;
+}
+
 .info {
   font-size: 12px;
   padding: 5px;
@@ -112,6 +118,7 @@ body {
   justify-content: space-between;
   border-bottom: 1px solid #ccc;
   flex-wrap: wrap;
+  cursor: pointer;
   img {
     width: 220px;
     height: 150px;
@@ -126,7 +133,7 @@ body {
   justify-content: space-between;
   flex-direction: column;
   border-bottom: 1px solid #ccc;
-
+  cursor: pointer;
   .imgs {
     flex: 1;
     display: flex;

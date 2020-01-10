@@ -25,8 +25,12 @@
           @mouseleave="mouseLeaveChild()"
         >
           <span class="leftNum">{{ index + 1 }}</span>
-          <span class="leftAddress">{{ child.city }}</span>
-          <span class="leftAddIntro">{{ child.desc }}</span>
+          <span class="leftAddress" @click="jumpActical(child.city)">{{
+            child.city
+          }}</span>
+          <span class="leftAddIntro" @click="jumpActical(child.city)">{{
+            child.desc
+          }}</span>
           <!--<div class="introtext introitem"></div>-->
         </div>
       </div>
@@ -51,6 +55,13 @@ export default {
     };
   },
   methods: {
+    jumpActical(Cname) {
+      this.$emit("cityList", Cname);
+
+      // // 为了页面渲染空的字符串
+      // return "";
+    },
+
     mouseOver(index) {
       this.isShow = !this.isShow;
       this.childList = this.leftList[index].children;
@@ -78,6 +89,7 @@ export default {
     }).then(res => {
       // console.log(res);
       this.leftList = res.data.data;
+      // console.log(this.leftList)
     });
   }
 };
@@ -97,6 +109,7 @@ export default {
 
 .text:hover {
   color: #ffa500;
+  border-right: 1px solid #fff;
 }
 
 .text:hover .arrow {
@@ -128,9 +141,7 @@ div.text:nth-child(4) {
 .postIntro {
   // display: none;
   width: 350px;
-
   line-height: 40px;
-
   font-size: 16px;
 }
 
@@ -141,6 +152,7 @@ div.text:nth-child(4) {
   font-size: 20px;
 }
 .leftAddress {
+  cursor: pointer;
   color: #ffa500;
   font-size: 16px;
   margin: 0 10px;
@@ -150,6 +162,10 @@ div.text:nth-child(4) {
   font-size: 16px;
 }
 
+.leftAddIntro:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
 .leftBottom {
   margin-top: 25px;
 

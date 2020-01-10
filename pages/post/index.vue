@@ -2,19 +2,24 @@
   <div>
     <div class="contianer">
       <div class="left">
-        <PostList />
+        <PostList @cityList="cityList" />
       </div>
       <div class="right">
-        <PostSearch />
+        <PostSearch @tuijian="cityList" @search="cityList" />
         <PostStar />
-        <PostItem />
+        <PostItem
+          v-for="(item, index) in postList"
+          :key="index"
+          :data="item"
+          @toDetail="toDetail"
+        />
         <div class="postPage">
           <el-pagination
             @size-change="handleSizeChange"
             @current-change="handleCurrentChange"
-            :current-page="currentPage4"
+            :current-page="pageIndex"
             :page-sizes="[3, 6, 9, 12]"
-            :page-size="100"
+            :page-size="pageSize"
             layout="total, sizes, prev, pager, next, jumper"
             :total="total"
           >
@@ -36,29 +41,87 @@ export default {
     return {
       total: 0,
       postList: [],
-      currentPage1: 5,
-      currentPage2: 5,
-      currentPage3: 5,
-      currentPage4: 4
+      keepList: [],
+      pageIndex: 1, // 当前页数
+      pageSize: 3 // 显示条数
     };
   },
   methods: {
-    handleSizeChange(val) {
-      console.log(`每页 ${val} 条`);
+    toDetail(data) {
+      // console.log(data);
+
+      this.$axios({
+        url: "/posts",
+        params: {
+          city: data
+        }
+      }).then(res => {
+        // console.log(res);
+        if (res.status === 200) {
+          this.$router.push({
+            path: "post/detail?id=" + data,
+            query: {
+              id: data
+            }
+          });
+        }
+      });
     },
+
+    cityList(data) {
+      console.log(data);
+
+      this.$axios({
+        url: "/posts",
+        params: {
+          city: data
+        }
+      }).then(res => {
+        // console.log(res);
+        this.postList = res.data.data;
+
+        // console.log(this.postList);
+        this.total = this.postList.length;
+        this.pageData();
+      });
+    },
+    setDataList() {
+      this.$axios({
+        url: "/posts"
+      }).then(res => {
+        // console.log(res);
+        this.postList = res.data.data;
+        console.log(this.postList);
+        // console.log(this.postList);
+        this.total = this.postList.length;
+        this.pageData();
+      });
+    },
+
+    handleSizeChange(val) {
+      //   console.log(`每页 ${val} 条`);
+      this.pageSize = val;
+      this.pageIndex = 1;
+      this.setDataList();
+    },
+
     handleCurrentChange(val) {
-      console.log(`当前页: ${val}`);
+      //   console.log(`当前页: ${val}`);
+      this.pageIndex = val;
+      this.setDataList();
+    },
+
+    pageData() {
+      const start = (this.pageIndex - 1) * this.pageSize;
+      const end = start + this.pageSize;
+      //   console.log(start,end)
+      this.total = this.postList.length;
+      this.postList = this.postList.slice(start, end);
+      //   console.log(this.postList);
     }
   },
   mounted() {
-    this.$axios({
-      url: "/posts"
-    }).then(res => {
-      // console.log(res);
-      this.postList = res.data.data;
-      console.log(this.postList);
-      this.total = this.postList.length;
-    });
+    this.setDataList();
   },
   components: {
     PostList,

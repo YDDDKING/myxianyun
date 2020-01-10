@@ -59,32 +59,32 @@ export default {
     return {
       departCity: "", //选择城市
       caogao: {
-        caogaoIndex: 0,
         caogaoTitle: "",
         caogaoContent: ""
       },
+      cacheCaogao: {},
       createAdd: "",
       input: "",
 
       config: {
         // 上传图片的配置
         uploadImage: {
-          url: "http:127.0.0.1:1337/upload",
-          name: "file",
+          url: "http://127.0.0.1:1337/upload",
+          name: "files",
 
           // res是结果，insert方法会把内容注入到编辑器中，res.data.url是资源地址
           uploadSuccess(res, insert) {
-            insert("http:127.0.0.1:1337" + res.data.url);
+            insert("http://127.0.0.1:1337" + res.data[0].url);
             console.log(res);
           }
         },
 
         // 上传视频的配置
         uploadVideo: {
-          url: "http:127.0.0.1:1337/upload",
-          name: "file",
+          url: "http://127.0.0.1:1337/upload",
+          name: "files",
           uploadSuccess(res, insert) {
-            insert("http:127.0.0.1:1337" + res.data.url);
+            insert("http://127.0.0.1:1337" + res.data.url);
           }
         }
       }
@@ -125,17 +125,10 @@ export default {
       // console.log(this.$refs.editorContent.editor.root.innerText);
       this.caogao.caogaoTitle = this.$refs.editorTitle.$refs.input.value;
       this.caogao.caogaoContent = this.$refs.editorContent.editor.root.innerText;
-
-      if (this.$store.state.post.caogao.length !== 0) {
-        this.caogao.caogaoIndex = this.$store.state.post.caogao.caogaoIndex;
-      }
+      this.cacheCaogao = { ...this.caogao };
+      this.$store.commit("post/setCaogao", this.cacheCaogao);
       // console.log(this.$store.state.post.caogao);
-
-      this.caogao.caogaoIndex = this.caogao.caogaoIndex + 1;
-
-      // this.$store.commit("post/setCaogao", this.caogao);
       // console.log(this.$store.state.post.caogao);
-      // console.log(this.caogao);
     },
 
     queryAddress(value, cb) {
