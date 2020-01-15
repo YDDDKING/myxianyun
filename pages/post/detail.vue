@@ -6,7 +6,7 @@
       <PostDetailComment />
     </div>
     <div class="postDetailRight">
-      右边
+      <postDetailRight />
     </div>
   </div>
 </template>
@@ -15,12 +15,14 @@
 import PostDetailBread from "../../components/post/postDetailBread";
 import PostDetailContent from "../../components/post/postDetailContent";
 import PostDetailComment from "../../components/post/postDetailComment.vue";
+import postDetailRight from "../../components/post/postDetailRight";
 
 export default {
   components: {
     PostDetailBread,
     PostDetailContent,
-    PostDetailComment
+    PostDetailComment,
+    postDetailRight
   }
 };
 </script>
@@ -39,6 +41,6 @@ export default {
 
 .postDetailRight {
   width: 280px;
-  margin-left: 50px;
+  margin-left: 10px;
 }
 </style>

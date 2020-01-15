@@ -47,34 +47,54 @@ export default {
   },
   methods: {
     setStar() {
-      if (this.contentList.like.star === true) {
-        this.$message({
-          message: "已收藏",
-          type: "warning"
-        });
-        return;
-      }
+      // if (this.contentList.like.star === true) {
+      //   this.$message({
+      //     message: "已收藏",
+      //     type: "warning"
+      //   });
+      //   return;
+      // }
 
-      this.$message({
-        message: "收藏成功",
-        type: "success"
+      // this.$message({
+      //   message: "收藏成功",
+      //   type: "success"
+      // });
+      // this.contentList.like.star = true;
+      let idNum = this.$route.query.id;
+      this.$axios({
+        url: "/posts/star",
+        headers: {
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        },
+        params: {
+          id: idNum
+        }
+      }).then(res => {
+        // console.log(res);
+        this.$message({
+          message: "res.data.message",
+          type: "success"
+        });
       });
-      this.contentList.like.star = true;
     },
     setZan() {
-      if (this.contentList.like.zan === true) {
-        this.$message({
-          message: "用户已经点赞",
-          type: "warning"
-        });
-        return;
-      }
+      let idNum = this.$route.query.id;
 
-      this.$message({
-        message: "点赞成功",
-        type: "success"
+      this.$axios({
+        url: "/posts/like",
+        headers: {
+          Authorization: "Bearer " + this.$store.state.user.userInfo.token
+        },
+        params: {
+          id: this.contentList.id
+        }
+      }).then(res => {
+        // console.log(res);
+        this.$message({
+          message: "res.data.message",
+          type: "success"
+        });
       });
-      this.contentList.like.zan = true;
     }
   },
   mounted() {
@@ -88,14 +108,14 @@ export default {
       }
     }).then(res => {
       if (res.status === 200) {
-        if (res.data.data[0].like === null) {
-          res.data.data[0].like = {
-            star: false,
-            zan: false
-          };
-        }
+        // if (res.data.data[0].like === null) {
+        //   res.data.data[0].like = {
+        //     star: false,
+        //     zan: false
+        //   };
+        // }
         this.contentList = res.data.data[0];
-        console.log(this.contentList);
+        // console.log(this.contentList);
       }
       //   console.log(res);
     });
